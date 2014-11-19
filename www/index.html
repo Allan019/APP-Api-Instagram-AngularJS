@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<!--
+    Copyright (c) 2012-2014 Adobe Systems Incorporated. All rights reserved.
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+    https://api.instagram.com/v1/users/209474477/media/recent?access_token=209474477.5b9e1e6.2188edf4f9584603af65c5c618821c8d
+-->
+
+<html ng-app="App">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <title>Instagram</title>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+
+        <!-- Latest compiled and minified JavaScript -->
+    </head>
+    <body>
+
+            
+            <div id="galeria" ng-controller="InstaController">
+            <div class="topo-fake"></div>
+             <div class="row topo">
+              <div class="col-lg-6 busca">
+                <div class="input-group input-group-lg">
+                  <input type="text" class="form-control" ng-model="busca" placeholder="Buscar por TAG">
+                  <span class="input-group-btn">
+                    <button class="btn btn-primary" ng-click="buscar()" type="button"><i class="glyphicon glyphicon-search"></i></button>
+                  </span>
+                </div><!-- /input-group -->
+              </div><!-- /.col-lg-6 -->
+            </div><!-- /.row -->
+           <!--  <ul>
+            <li ng-repeat="insta in inst">
+                <div class="desc">
+                    {{insta.caption.text}}
+                </div>
+                
+                <img src="{{insta.images.standard_resolution.url}}" alt="">
+
+            </li>
+                
+            </ul> -->
+            <div class="row posts" >
+              <div class="col-sm-6 col-md-4 bloco" ng-repeat="insta in inst">
+                <div class="thumbnail">
+                    <div class="altor">
+                        <img class="img" src="{{insta.caption.from.profile_picture}}" alt="">
+                        <a href="http://instagram.com/{{insta.caption.from.username}}" target="_blank" ><b>{{insta.caption.from.full_name}}</b></a>
+                    </div>
+                  <img src="{{insta.images.standard_resolution.url}}" alt="...">
+                  <div class="caption">
+                    <!-- <h3>Thumbnail label</h3> -->
+                    <p>{{insta.caption.text}}</p>
+                    <p><a href="{{insta.link}}" target="_blank" class="btn btn-info  btn-lg" role="button"><i class="glyphicon glyphicon-picture"></i> VER NO INSTAGRAM</a></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+
+        <script src="js/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+        <script src="js/angular.min.js"></script>
+        <script>
+      /**
+        *  Module
+        *
+        * Description
+        */
+        angular.module('App', [])
+        .controller('InstaController',function($scope, $http){
+            $scope.busca;
+            $scope.buscar = function(){
+                $scope.getInsta($scope.busca);
+            }
+
+            
+            $scope.getInsta = function(tag){
+                var url = 'https://api.instagram.com/v1/media/popular?client_id=6f6a0f971acf482a8dc4f9e66c2ec8b9';
+                if(tag !== undefined){
+                    url = "https://api.instagram.com/v1/tags/"+tag+"/media/recent?client_id=6f6a0f971acf482a8dc4f9e66c2ec8b9"
+                }
+                $http.get(url)
+                .success(function(data){
+                    $scope.inst = data.data;
+                    console.log($scope.inst);
+
+                });
+            }
+            $scope.getInsta();
+        });
+        </script>
+    </body>
+</html>
